@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deaddilly</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0a0a0a;
+      --fg: #e8e4dc;
+      --dim: #555;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 18px;
+      line-height: 1.6;
+      cursor: default;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* --- NOISE --- */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    main {
+      flex: 1;
+      padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 6vw, 5rem);
+      max-width: 780px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      margin-bottom: 3.5rem;
+    }
+
+    h1 {
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 2rem;
+      color: var(--fg);
+      display: inline-block;
+    }
+
+    h1 .letter {
+      display: inline-block;
+    }
+
+    h1 .letter.frak {
+      font-family: 'UnifrakturMaguntia', cursive;
+      font-size: 1.1em;
+      line-height: 0.85;
+      vertical-align: middle;
+    }
+
+    .bio {
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      color: #aaa;
+      max-width: 540px;
+      line-height: 1.75;
+    }
+
+    .bio em {
+      font-family: 'UnifrakturMaguntia', cursive;
+      font-size: 1.1em;
+      color: var(--fg);
+      font-style: normal;
+    }
+
+    .bio a {
+      color: var(--fg);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: #444;
+      transition: text-decoration-color 0.2s;
+    }
+
+    .bio a:hover {
+      text-decoration-color: var(--fg);
+    }
+
+    section {
+      margin-bottom: 3rem;
+    }
+
+    .section-label {
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .section-label::after {
+      content: '↓';
+      font-size: 0.8rem;
+    }
+
+    .contact-link {
+      display: block;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 1rem;
+      color: #666;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+      margin-bottom: 0.4rem;
+    }
+
+    .contact-link:hover {
+      color: var(--fg);
+    }
+  </style>
+</head>
+<body>
+
+  <main>
+    <header>
+      <h1 id="glitch-title"></h1>
+      <p class="bio">
+        Dilan Rey Manahan is a conceptual designer and the mind behind <em>deaddilly</em> — a practice concerned with image, idea, and the space between intention and form.<br><br>
+        Working at the edge of design and concept, Manahan's output is deliberate and considered — built slowly, released carefully, and rooted in a persistent questioning of what design is actually for.<br><br>
+        All work is documented at the <a href="https://www.instagram.com/deaddilly.archiv/" target="_blank" rel="noopener">archive</a>.
+      </p>
+    </header>
+
+    <section>
+      <div class="section-label">Contact</div>
+      <a class="contact-link" href="https://www.instagram.com/deaddilly.archiv/" target="_blank" rel="noopener">Archive</a>
+      <a class="contact-link" href="mailto:dilan@deaddilly.com">dilan@deaddilly.com</a>
+    </section>
+  </main>
+
+  <script>
+    const TARGET = 'deaddilly';
+
+    const MOJIBAKE = [
+      // CJK
+      '死','亡','闇','壊','滅','怨','呪','霊','魂','鬼','無','空','虚','狂','凶',
+      // Cyrillic
+      'Ж','Ш','Щ','Ф','Ю','Я','Э','Ъ','Ь','Х',
+      // Arabic
+      'ظ','ع','غ','ف','ق','ك','ل','م','ن','ه',
+      // Math / symbols
+      '∅','∞','∇','∆','⊗','⊘','⊙','†','‡','§','¶',
+      // Box drawing / block
+      '░','▒','▓','█','▄','▀','■','□',
+      // Runic
+      'ᚱ','ᚢ','ᚦ','ᚨ','ᚷ','ᚹ','ᚺ','ᚾ','ᛁ','ᛃ','ᛇ','ᛈ','ᛉ','ᛊ',
+      // Misc
+      '☠','☣','⚡','⚙','⛧','✝','⌖',
+      // Unicode math fraktur block
+      '𝔄','𝔅','ℭ','𝔇','𝔈','𝔉','𝔊','ℌ','ℑ','𝔍','𝔎','𝔏','𝔐','𝔑',
+      '𝔒','𝔓','𝔔','ℜ','𝔖','𝔗','𝔘','𝔙','𝔚','𝔛','𝔜','ℨ',
+    ];
+
+    function randMoji() {
+      return MOJIBAKE[Math.floor(Math.random() * MOJIBAKE.length)];
+    }
+
+    // Build letter spans
+    const h1 = document.getElementById('glitch-title');
+    const spans = [];
+
+    TARGET.split('').forEach((char) => {
+      const span = document.createElement('span');
+      span.className = 'letter';
+      span.textContent = char;
+      h1.appendChild(span);
+      spans.push(span);
+    });
+
+    const states = spans.map(() => ({
+      glitchTimer: 0,
+      frakTimer: 0,
+      offTimer: 0,
+    }));
+
+    const TICK = 55;
+
+    function tick() {
+      spans.forEach((span, i) => {
+        const s = states[i];
+
+        if (s.glitchTimer > 0) s.glitchTimer--;
+        if (s.frakTimer > 0) s.frakTimer--;
+        if (s.offTimer > 0) s.offTimer--;
+
+        const idle = s.glitchTimer === 0 && s.frakTimer === 0 && s.offTimer === 0;
+
+        if (idle) {
+          const roll = Math.random();
+          if (roll < 0.04)       s.glitchTimer = 1 + Math.floor(Math.random() * 6);
+          else if (roll < 0.06)  s.frakTimer   = 3 + Math.floor(Math.random() * 10);
+          else if (roll < 0.075) s.offTimer    = 1 + Math.floor(Math.random() * 3);
+        }
+
+        if (s.offTimer > 0) {
+          span.style.opacity = '0';
+          span.style.color = '';
+          span.className = 'letter';
+          span.textContent = TARGET[i];
+        } else if (s.glitchTimer > 0) {
+          span.style.opacity = Math.random() > 0.25 ? '1' : '0.05';
+          span.style.color = Math.random() > 0.5 ? '#fff' : '#e8e4dc';
+          span.className = 'letter';
+          span.textContent = randMoji();
+        } else if (s.frakTimer > 0) {
+          span.style.opacity = '1';
+          span.style.color = '#e8e4dc';
+          span.className = 'letter frak';
+          span.textContent = TARGET[i];
+        } else {
+          // Rare single-frame white flash (strobe)
+          span.style.color = Math.random() < 0.007 ? '#fff' : '#e8e4dc';
+          span.style.opacity = '1';
+          span.className = 'letter';
+          span.textContent = TARGET[i];
+        }
+      });
+
+      // Occasional full cascade — all letters corrupt at once
+      if (Math.random() < 0.003) {
+        spans.forEach((_, i) => {
+          setTimeout(() => {
+            states[i].glitchTimer = 2 + Math.floor(Math.random() * 5);
+          }, i * 25);
+        });
+      }
+    }
+
+    setInterval(tick, TICK);
+  </script>
+
+</body>
+</html>
