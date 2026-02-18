@@ -44,7 +44,7 @@
       opacity: 0.5;
     }
 
-    /* Glitch title — centered on page */
+    /* Glitch title — centered */
     .title-wrap {
       position: fixed;
       top: 50%;
@@ -74,7 +74,7 @@
       vertical-align: middle;
     }
 
-    /* Bio + links — fixed to bottom-left */
+    /* Bio + links — bottom-left */
     .bottom-left {
       position: fixed;
       bottom: clamp(1.5rem, 4vw, 3rem);
@@ -94,18 +94,6 @@
       font-size: 1.1em;
       color: #03ff38;
       font-style: normal;
-    }
-
-    .bio a {
-      color: var(--fg);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      text-decoration-color: #444;
-      transition: text-decoration-color 0.2s;
-    }
-
-    .bio a:hover {
-      text-decoration-color: var(--fg);
     }
 
     .section-label {
@@ -139,6 +127,42 @@
     .contact-link:hover {
       color: var(--fg);
     }
+
+    /* --- AUDIO PROMPT — top-right --- */
+    #audio-prompt {
+      position: fixed;
+      top: clamp(1.5rem, 4vw, 3rem);
+      right: clamp(1.5rem, 4vw, 3rem);
+      z-index: 10;
+      cursor: pointer;
+      user-select: none;
+      color: var(--dim);
+      transition: color 0.2s;
+    }
+
+    #audio-prompt:hover {
+      color: var(--fg);
+    }
+
+    #audio-prompt svg {
+      display: block;
+      width: 26px;
+      height: 26px;
+    }
+
+    #audio-prompt.playing {
+      color: #03ff38;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    #sc-player {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -157,28 +181,75 @@
     <a class="contact-link" href="https://www.instagram.com/deaddilly" target="_blank" rel="noopener">feed</a>
     <a class="contact-link" href="https://www.instagram.com/deaddilly.archiv/" target="_blank" rel="noopener">archiv</a>
     <a class="contact-link" href="https://www.ggitslab.com" target="_blank" rel="noopener">ggits</a>
-    <a class="contact-link" href="mailto:dilan@deaddilly.com">dilan@deaddilly.com</a>
+    <a class="contact-link" href="mailto:dilan@deaddilly.com">email</a>
+  </div>
+
+  <!-- Hidden SoundCloud player -->
+  <iframe id="sc-player"
+    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/deaddilly/guarantd-mix-15m&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false"
+    allow="autoplay">
+  </iframe>
+
+  <!-- Audio toggle, top-right -->
+  <div id="audio-prompt" title="play / pause">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+      <!-- headband -->
+      <path d="M3 14V11a9 9 0 0 1 18 0v3"/>
+      <!-- left ear cup -->
+      <path d="M3 14a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3z"/>
+      <!-- right ear cup -->
+      <path d="M16 14a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3z"/>
+    </svg>
   </div>
 
   <script>
+    // --- AUDIO ---
+    const prompt   = document.getElementById('audio-prompt');
+    const iframe   = document.getElementById('sc-player');
+    let widget     = null;
+    let playing    = false;
+    let ready      = false;
+
+    const scScript = document.createElement('script');
+    scScript.src   = 'https://w.soundcloud.com/player/api.js';
+    scScript.onload = () => {
+      widget = SC.Widget(iframe);
+      widget.bind(SC.Widget.Events.READY, () => {
+        ready = true;
+        widget.setVolume(80);
+      });
+      // When track ends, loop it
+      widget.bind(SC.Widget.Events.FINISH, () => {
+        widget.seekTo(0);
+        widget.play();
+      });
+    };
+    document.head.appendChild(scScript);
+
+    prompt.addEventListener('click', () => {
+      if (!ready) return;
+      if (!playing) {
+        widget.play();
+        playing = true;
+        prompt.classList.add('playing');
+      } else {
+        widget.pause();
+        playing = false;
+        prompt.classList.remove('playing');
+      }
+    });
+
+    // --- GLITCH ---
     const TARGET = 'deaddilly';
 
     const MOJIBAKE = [
-      // CJK
       '死','亡','闇','壊','滅','怨','呪','霊','魂','鬼','無','空','虚','狂','凶',
-      // Cyrillic
       'Ж','Ш','Щ','Ф','Ю','Я','Э','Ъ','Ь','Х',
-      // Arabic
       'ظ','ع','غ','ف','ق','ك','ل','م','ن','ه',
-      // Math / symbols
       '∅','∞','∇','∆','⊗','⊘','⊙','†','‡','§','¶',
-      // Box drawing / block
       '░','▒','▓','█','▄','▀','■','□',
-      // Runic
       'ᚱ','ᚢ','ᚦ','ᚨ','ᚷ','ᚹ','ᚺ','ᚾ','ᛁ','ᛃ','ᛇ','ᛈ','ᛉ','ᛊ',
-      // Misc
       '☠','☣','⚡','⚙','⛧','✝','⌖',
-      // Unicode math fraktur block
       '𝔄','𝔅','ℭ','𝔇','𝔈','𝔉','𝔊','ℌ','ℑ','𝔍','𝔎','𝔏','𝔐','𝔑',
       '𝔒','𝔓','𝔔','ℜ','𝔖','𝔗','𝔘','𝔙','𝔚','𝔛','𝔜','ℨ',
     ];
@@ -187,13 +258,12 @@
       return MOJIBAKE[Math.floor(Math.random() * MOJIBAKE.length)];
     }
 
-    // Build letter spans
-    const h1 = document.getElementById('glitch-title');
+    const h1    = document.getElementById('glitch-title');
     const spans = [];
 
     TARGET.split('').forEach((char) => {
-      const span = document.createElement('span');
-      span.className = 'letter';
+      const span       = document.createElement('span');
+      span.className   = 'letter';
       span.textContent = char;
       h1.appendChild(span);
       spans.push(span);
@@ -201,8 +271,8 @@
 
     const states = spans.map(() => ({
       glitchTimer: 0,
-      frakTimer: 0,
-      offTimer: 0,
+      frakTimer:   0,
+      offTimer:    0,
     }));
 
     const TICK = 55;
@@ -212,43 +282,42 @@
         const s = states[i];
 
         if (s.glitchTimer > 0) s.glitchTimer--;
-        if (s.frakTimer > 0) s.frakTimer--;
-        if (s.offTimer > 0) s.offTimer--;
+        if (s.frakTimer   > 0) s.frakTimer--;
+        if (s.offTimer    > 0) s.offTimer--;
 
         const idle = s.glitchTimer === 0 && s.frakTimer === 0 && s.offTimer === 0;
 
         if (idle) {
           const roll = Math.random();
-          if (roll < 0.04)       s.glitchTimer = 1 + Math.floor(Math.random() * 6);
+          if      (roll < 0.04)  s.glitchTimer = 1 + Math.floor(Math.random() * 6);
           else if (roll < 0.06)  s.frakTimer   = 3 + Math.floor(Math.random() * 10);
           else if (roll < 0.075) s.offTimer    = 1 + Math.floor(Math.random() * 3);
         }
 
         if (s.offTimer > 0) {
-          span.style.opacity = '0';
-          span.style.color = '';
-          span.className = 'letter';
-          span.textContent = TARGET[i];
+          span.style.opacity   = '0';
+          span.style.color     = '';
+          span.className       = 'letter';
+          span.textContent     = TARGET[i];
         } else if (s.glitchTimer > 0) {
-          span.style.opacity = Math.random() > 0.25 ? '1' : '0.05';
-          span.style.color = Math.random() > 0.5 ? '#fff' : '#e8e4dc';
-          span.className = 'letter';
-          span.textContent = randMoji();
+          span.style.opacity   = Math.random() > 0.25 ? '1' : '0.05';
+          span.style.color     = Math.random() > 0.5  ? '#fff' : '#e8e4dc';
+          span.className       = 'letter';
+          span.textContent     = randMoji();
         } else if (s.frakTimer > 0) {
-          span.style.opacity = '1';
-          span.style.color = '#e8e4dc';
-          span.className = 'letter frak';
-          span.textContent = TARGET[i];
+          span.style.opacity   = '1';
+          span.style.color     = '#e8e4dc';
+          span.className       = 'letter frak';
+          span.textContent     = TARGET[i];
         } else {
-          // Rare single-frame white flash (strobe)
-          span.style.color = Math.random() < 0.007 ? '#fff' : '#e8e4dc';
-          span.style.opacity = '1';
-          span.className = 'letter';
-          span.textContent = TARGET[i];
+          span.style.color     = Math.random() < 0.007 ? '#fff' : '#e8e4dc';
+          span.style.opacity   = '1';
+          span.className       = 'letter';
+          span.textContent     = TARGET[i];
         }
       });
 
-      // Occasional full cascade — all letters corrupt at once
+      // Occasional full cascade
       if (Math.random() < 0.003) {
         spans.forEach((_, i) => {
           setTimeout(() => {
