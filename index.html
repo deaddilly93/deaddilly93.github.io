@@ -31,8 +31,6 @@
       line-height: 1.6;
       cursor: default;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
     /* --- NOISE --- */
@@ -46,16 +44,13 @@
       opacity: 0.5;
     }
 
-    main {
-      flex: 1;
-      padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 6vw, 5rem);
-      max-width: 780px;
-      position: relative;
+    /* Glitch title — centered on page */
+    .title-wrap {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       z-index: 1;
-    }
-
-    header {
-      margin-bottom: 3.5rem;
     }
 
     h1 {
@@ -64,7 +59,6 @@
       font-weight: 700;
       letter-spacing: -0.04em;
       line-height: 1;
-      margin-bottom: 2rem;
       color: var(--fg);
       display: inline-block;
     }
@@ -80,11 +74,19 @@
       vertical-align: middle;
     }
 
+    /* Bio + links — fixed to bottom-left */
+    .bottom-left {
+      position: fixed;
+      bottom: clamp(1.5rem, 4vw, 3rem);
+      left: clamp(1.5rem, 4vw, 3rem);
+      z-index: 1;
+    }
+
     .bio {
-      font-size: clamp(1rem, 2vw, 1.15rem);
+      font-size: clamp(0.85rem, 1.5vw, 1rem);
       color: #aaa;
-      max-width: 540px;
       line-height: 1.75;
+      margin-bottom: 1.2rem;
     }
 
     .bio em {
@@ -106,17 +108,13 @@
       text-decoration-color: var(--fg);
     }
 
-    section {
-      margin-bottom: 3rem;
-    }
-
     .section-label {
       font-family: Helvetica, Arial, sans-serif;
       font-size: 0.65rem;
       letter-spacing: 0.25em;
       text-transform: uppercase;
       color: var(--dim);
-      margin-bottom: 1.2rem;
+      margin-bottom: 1rem;
       display: flex;
       align-items: center;
       gap: 0.6rem;
@@ -130,7 +128,7 @@
     .contact-link {
       display: block;
       font-family: Helvetica, Arial, sans-serif;
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: #666;
       text-decoration: none;
       letter-spacing: 0.02em;
@@ -145,22 +143,22 @@
 </head>
 <body>
 
-  <main>
-    <header>
-      <h1 id="glitch-title"></h1>
-      <p class="bio">
-        Dilan Rey Manahan <em>Toronto, ON</em>
-      </p>
-    </header>
+  <!-- Glitch title -->
+  <div class="title-wrap">
+    <h1 id="glitch-title"></h1>
+  </div>
 
-    <section>
-      <div class="section-label">contact</div>
-      <a class="contact-link" href="https://www.instagram.com/deaddilly" target="_blank" rel="noopener">feed</a>
-      <a class="contact-link" href="https://www.instagram.com/deaddilly.archiv/" target="_blank" rel="noopener">archiv</a>
-      <a class="contact-link" href="https://www.ggitslab.com" target="_blank" rel="noopener">ggits</a>
-      <a class="contact-link" href="mailto:dilan@deaddilly.com">dilan@deaddilly.com</a>
-    </section>
-  </main>
+  <!-- Bio + links, bottom-left -->
+  <div class="bottom-left">
+    <p class="bio">
+      Dilan Rey Manahan <em>Toronto, ON</em>
+    </p>
+    <div class="section-label">contact</div>
+    <a class="contact-link" href="https://www.instagram.com/deaddilly" target="_blank" rel="noopener">feed</a>
+    <a class="contact-link" href="https://www.instagram.com/deaddilly.archiv/" target="_blank" rel="noopener">archiv</a>
+    <a class="contact-link" href="https://www.ggitslab.com" target="_blank" rel="noopener">ggits</a>
+    <a class="contact-link" href="mailto:deaddilly93@gmail.com">deaddilly93@gmail.com</a>
+  </div>
 
   <script>
     const TARGET = 'deaddilly';
